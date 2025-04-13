@@ -183,6 +183,34 @@ async def cmd_results(message: Message):
 
 
 
+
+
+#-----Запрос скриншотов для перевода сообщений
+from aiogram import F
+from aiogram.types import FSInputFile, InputMediaPhoto
+from aiogram.utils.media_group import MediaGroupBuilder
+
+@dp.message(F.text.lower().in_({"перевод", "translate", "translation"}))
+async def explain_translation(message: Message):
+    text = (
+        "Вот как можно перевести сообщения других игроков в чате.\n"
+        "Here's how you can translate other players' messages in the chat."
+    )
+
+    # Отправляем текст
+    await message.answer(text)
+
+    # Собираем фото в альбом
+    builder = MediaGroupBuilder()
+    image_paths = ["images/translation/step1.jpg", "images/translation/step2.jpg", "images/translation/step3.jpg", "images/translation/step4.jpg",]
+
+    for path in image_paths:
+        builder.add_photo(media=FSInputFile(path))
+
+    # Отправляем альбом
+    await message.answer_media_group(builder.build())
+
+
 # --- Старт ---
 async def main():
     logging.basicConfig(level=logging.INFO)
