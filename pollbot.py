@@ -196,7 +196,7 @@ async def explain_translation(message: Message):
     )
 
     # Пути к картинкам
-    image_paths = ["images/step1.jpg", "images/step2.jpg", "images/step3.jpg"]
+    image_paths = ["images/translation/step1.jpg", "images/translation/step2.jpg", "images/translation/step3.jpg", "images/translation/step4.jpg"]
 
     # Строим медиагруппу
     builder = MediaGroupBuilder()
