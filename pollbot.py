@@ -144,8 +144,10 @@ async def finish_poll_after(poll_id: str, chat_id: int, delay: int):
 
     text = f"🥇{poll['title']}\nОпрос окончен!\n\nРезультаты:\n"
     winners = poll["winners"]
-    for option, count in results[:winners]:
-        text += f"{option} — {count} голосов\n"
+
+    for i, (option, count) in enumerate(results):
+        medal = "🥇" if i < winners else "➖"
+        text += f"{medal} {option} — {count} голосов\n"
 
     await bot.send_message(chat_id, text)
     await bot.unpin_chat_message(chat_id=chat_id, message_id=message_ids[poll_id])
@@ -155,18 +157,21 @@ async def finish_poll_after(poll_id: str, chat_id: int, delay: int):
     user_votes.pop(poll_id, None)
     message_ids.pop(poll_id, None)
 
+
 # --- Команда /results для админа ---
 @dp.message(Command("results"))
 async def cmd_results(message: Message):
-
     for poll_id, poll in polls.items():
         results = sorted(poll["votes"].items(), key=itemgetter(1), reverse=True)
-        text = f"⏳{poll['title']}\nРанний доступ к результатам:\n"
+        text = f"⏳{poll['title']}\nРанний доступ к результатам:\n\n"
         winners = poll["winners"]
-        for option, count in results[:winners]:
-            text += f"{option} — {count} голосов\n"
+
+        for i, (option, count) in enumerate(results):
+            medal = "🥇" if i < winners else "➖"
+            text += f"{medal} {option} — {count} голосов\n"
 
         await message.answer(text)
+
 
 # --- Старт ---
 async def main():
