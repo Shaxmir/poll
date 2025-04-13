@@ -1,6 +1,6 @@
 import asyncio
 from aiogram import Bot, Dispatcher, F
-from aiogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, FSInputFile, InputMediaPhoto
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -8,7 +8,7 @@ from aiogram.filters import Command, CommandStart
 import logging
 from collections import defaultdict
 from operator import itemgetter
-
+from aiogram.utils.media_group import MediaGroupBuilder
 # --- Конфиг ---
 API_TOKEN = "8065857722:AAEwSlrEEIAtxxBY4WDr04csKrGjXubIBUw"
 ADMIN_USER_IDS = (764614936, 997838012)
@@ -186,28 +186,28 @@ async def cmd_results(message: Message):
 
 
 #-----Запрос скриншотов для перевода сообщений
-from aiogram import F
-from aiogram.types import FSInputFile, InputMediaPhoto
-from aiogram.utils.media_group import MediaGroupBuilder
 
 @dp.message(F.text.lower().in_({"перевод", "translate", "translation"}))
 async def explain_translation(message: Message):
-    text = (
+    # Сообщение-подпись к первой картинке
+    caption = (
         "Вот как можно перевести сообщения других игроков в чате.\n"
         "Here's how you can translate other players' messages in the chat."
     )
 
-    # Отправляем текст
-    await message.answer(text)
+    # Пути к картинкам
+    image_paths = ["images/step1.jpg", "images/step2.jpg", "images/step3.jpg"]
 
-    # Собираем фото в альбом
+    # Строим медиагруппу
     builder = MediaGroupBuilder()
-    image_paths = ["images/translation/step1.jpg", "images/translation/step2.jpg", "images/translation/step3.jpg", "images/translation/step4.jpg",]
+    for i, path in enumerate(image_paths):
+        photo = FSInputFile(path)
+        if i == 0:
+            builder.add_photo(media=photo, caption=caption)
+        else:
+            builder.add_photo(media=photo)
 
-    for path in image_paths:
-        builder.add_photo(media=FSInputFile(path))
-
-    # Отправляем альбом
+    # Отправляем медиагруппу (альбом)
     await message.answer_media_group(builder.build())
 
 
