@@ -8,10 +8,18 @@ from aiogram.filters import Command, CommandStart
 import logging
 from collections import defaultdict
 from operator import itemgetter
+from dotenv import load_dotenv
+import os
+
+# Загружаем переменные окружения из .env файла
+load_dotenv()
+
+API_TOKEN = os.getenv("API_TOKEN")
+ADMIN_USER_IDS = tuple(map(int, os.getenv("ADMIN_USER_IDS").split(',')))
 
 # --- Конфиг ---
-API_TOKEN = "8065857722:AAEwSlrEEIAtxxBY4WDr04csKrGjXubIBUw"
-ADMIN_USER_IDS = (764614936, 123456789)
+API_TOKEN = API_TOKEN
+ADMIN_USER_IDS = ADMIN_USER_IDS
 
 # --- FSM состояния ---
 class PollStates(StatesGroup):
